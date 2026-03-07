@@ -2,12 +2,17 @@
 #include <stdexcept>
 #include <vector>
 #include <fstream>
-
+#include <cmath>
+//////////////////////////////
+///
+///DAY 1
+///
+//////////////////////////////
 std::vector<std::string> read_input_file() {
-    std::ifstream in("/Users/ngoquyduong/CLionProjects/assessment_real/input.txt");
+    std::ifstream in("/Users/ngoquyduong/CLionProjects/assessment_real/input1.txt");
 
     if (!in.is_open()) {
-        throw std::runtime_error("Could not open input.txt");
+        throw std::runtime_error("Could not open input1.txt");
     }
 
     std::vector<std::string> moves;
@@ -39,16 +44,10 @@ int convert_number(std::string char_and_num) {
     return number;
 }
 
-
-int main() {
-
-
+void dayOnePartOne() { // DAY 1 PART 1
     std::vector<std::string> moves = read_input_file();
     int start_position = 50;
     int password = 0;
-
-    std::cout << moves[0] << " " << moves[1] << " " << moves[2] << std::endl;
-
 
     for (int i = 0; i < moves.size(); i++) {
         int number = convert_number(moves[i]);
@@ -60,5 +59,44 @@ int main() {
     }
 
     std::cout << password << std::endl;
+}
+
+
+void dayOnePartTwo() {
+    std::vector<std::string> moves = read_input_file();
+    int start_position = 50;
+    int password = 0;
+
+    for (int i = 0; i < static_cast<int>(moves.size()); i++) {
+        char direction = moves[i][0];
+        int steps = std::stoi(moves[i].substr(1));
+
+        int step = (direction == 'L') ? -1 : 1;
+
+        for (int j = 0; j < steps; j++) {
+            start_position += step;
+            start_position = parse_valid_range(start_position);
+
+            if (start_position == 0) {
+                password++;
+            }
+        }
+    }
+
+    std::cout << password << std::endl;
+}
+
+
+//////////////////////////////
+///
+///DAY 2
+///
+//////////////////////////////
+
+int main() {
+
+
+
+    dayOnePartTwo();
     return 0;
 }
