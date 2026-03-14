@@ -4,6 +4,7 @@
 #include <fstream>
 #include <cmath>
 #include <sstream>
+#include <set>
 //////////////////////////////
 ///
 ///DAY 1
@@ -148,9 +149,60 @@ long long dayTwoPartOne() {
 
 }
 
+
+std::vector<int> find_divisors_without_itself(int number) {
+    int n = number;
+    std::vector<int> divisors;
+
+    for (int i = 1; i * i <= n; i++) {
+        if (n % i == 0) {
+            divisors.push_back(i);
+
+            if (i != n / i) {
+                divisors.push_back(n / i);
+            }
+        }
+    }
+
+    divisors.erase(remove(divisors.begin(), divisors.end(), n), divisors.end());
+    return divisors;
+}
+
+long long dayTwoPartTwo() {
+    std::vector<std::pair<long, long>> ranges = getInput2();
+    long long invalid_id_sum = 0;
+    for (int i = 0; i < ranges.size(); i++) {
+        long long left = ranges[i].first;
+        long long right = ranges[i].second;
+        for (long long j = left; j <= right; j++) {
+            std::string id = std::to_string(j);
+            int length = id.length();
+            std::vector<int> divisiors = find_divisors_without_itself(length);
+
+            bool is_invalid = false;
+            for (int k : divisiors) {
+                std::vector<std::string> chunks_of_strings;
+                for (int m = 0; m < length; m+= k) {
+                    std::string chunk = id.substr(m, k);
+                    chunks_of_strings.push_back(chunk);
+                }
+                std::set<std::string> chunk_set(chunks_of_strings.begin(), chunks_of_strings.end());
+                if (chunk_set.size() == 1) {
+                    is_invalid = true;
+                    break;
+                }
+            }
+            if (is_invalid) {
+                invalid_id_sum = invalid_id_sum + j;
+            }
+        }
+    };
+    return invalid_id_sum;
+}
+
 int main() {
 
 
-    std::cout << dayTwoPartOne();
+    std::cout << dayTwoPartTwo();
     return 0;
 }
