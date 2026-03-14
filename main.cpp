@@ -201,9 +201,93 @@ long long dayTwoPartTwo() {
     return invalid_id_sum;
 }
 
+
+
+/////////////////
+///
+///DAY 3
+///
+/////////////////
+
+
+std::vector<std::string> readInput3() {
+    std::ifstream in("/Users/ngoquyduong/CLionProjects/assessment_real/input3.txt");
+
+    if (!in.is_open()) {
+        throw std::runtime_error("Could not open input3.txt");
+    }
+
+    std::vector<std::string> banks;
+    std::string line;
+
+    while (std::getline(in, line)) {
+        if (!line.empty()) {
+            banks.push_back(line);
+        }
+    }
+
+    return banks;
+}
+
+int find_two_largest_digits_from_input(const std::string& number) {
+    int best = 0;
+
+    for (int i = 0; i < number.length(); i++) {
+        for (int j = i + 1; j < number.length(); j++) {
+            int first = number[i] - '0';
+            int second = number[j] - '0';
+            int value = first * 10 + second;
+
+            if (value > best) {
+                best = value;
+            }
+        }
+    }
+
+    return best;
+}
+
+
+
+int dayThreePartOne() {
+    std::vector<std::string> num_string = readInput3();
+    int total = 0;
+
+    for (int i = 0; i < num_string.size(); i++) {
+        total += find_two_largest_digits_from_input(num_string[i]);
+    }
+
+    return total;
+}
+
+
+
+
+std::vector<std::string> generateCombinations(const std::string& s, int k, int start, std::string current) {
+    std::vector<std::string> result;
+
+    if (current.length() == k) {
+        result.push_back(current);
+        return result;
+    }
+
+    for (int i = start; i < s.length(); i++) {
+        std::vector<std::string> subResult = generateCombinations(s, k, i + 1, current + s[i]);
+        result.insert(result.end(), subResult.begin(), subResult.end());
+    }
+
+    return result;
+}
+
+
+int dayThreePartTwo() {
+    std::vector<std::string> num_string = readInput3();
+    int total = 0;
+
+}
 int main() {
 
 
-    std::cout << dayTwoPartTwo();
+    std::cout << dayThreePartOne() ;
     return 0;
 }
