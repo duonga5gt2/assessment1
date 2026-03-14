@@ -5,6 +5,7 @@
 #include <cmath>
 #include <sstream>
 #include <set>
+#include <algorithm>
 //////////////////////////////
 ///
 ///DAY 1
@@ -96,7 +97,7 @@ void dayOnePartTwo() { // DAY 1 PART 2
 ///
 /// ///////
 
-std::vector<std::pair<long, long>> getInput2() {
+std::vector<std::pair<long long, long long>> getInput2() {
     std::ifstream in("/Users/ngoquyduong/CLionProjects/assessment_real/input2.txt");
     if (!in.is_open()) {
         std::cerr << "Cannot open file\n";
@@ -108,7 +109,7 @@ std::vector<std::pair<long, long>> getInput2() {
 
     std::stringstream ss(line);
     std::string token;
-    std::vector<std::pair<long, long>> ranges;
+    std::vector<std::pair<long long, long long>> ranges;
 
     while (getline(ss, token, ',')) {
         size_t dashPos = token.find('-');
@@ -123,8 +124,8 @@ std::vector<std::pair<long, long>> getInput2() {
 }
 
 long long dayTwoPartOne() {
-    std::vector<std::pair<long, long>> ranges = getInput2();
-    long long invalid_id_sum;
+    std::vector<std::pair<long long, long long>> ranges = getInput2();
+    long long invalid_id_sum = 0;
     for (int i = 0; i < ranges.size(); i++) {
         long long left = ranges[i].first;
         long long right = ranges[i].second;
@@ -164,12 +165,12 @@ std::vector<int> find_divisors_without_itself(int number) {
         }
     }
 
-    divisors.erase(remove(divisors.begin(), divisors.end(), n), divisors.end());
+    divisors.erase(std::remove(divisors.begin(), divisors.end(), n), divisors.end());
     return divisors;
 }
 
 long long dayTwoPartTwo() {
-    std::vector<std::pair<long, long>> ranges = getInput2();
+    std::vector<std::pair<long long, long long>> ranges = getInput2();
     long long invalid_id_sum = 0;
     for (int i = 0; i < ranges.size(); i++) {
         long long left = ranges[i].first;
