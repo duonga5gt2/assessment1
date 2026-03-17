@@ -47,7 +47,7 @@ int convert_number(std::string char_and_num) {
     return number;
 }
 
-void dayOnePartOne() { // DAY 1 PART 1
+int dayOnePartOne() { // DAY 1 PART 1
     std::vector<std::string> moves = read_input_file();
     int start_position = 50;
     int password = 0;
@@ -61,11 +61,11 @@ void dayOnePartOne() { // DAY 1 PART 1
         }
     }
 
-    std::cout << password << std::endl;
+    return password;
 }
 
 
-void dayOnePartTwo() { // DAY 1 PART 2
+int dayOnePartTwo() { // DAY 1 PART 2
     std::vector<std::string> moves = read_input_file();
     int start_position = 50;
     int password = 0;
@@ -86,7 +86,7 @@ void dayOnePartTwo() { // DAY 1 PART 2
         }
     }
 
-    std::cout << password << std::endl;
+    return password;
 }
 
 
@@ -291,9 +291,231 @@ long long dayThreePartTwo() {
     return total;
 
 }
+
+
+
+////////////
+///
+///DAY 4
+///
+///////////
+///
+
+
+std::vector<std::string> readInput4() {
+    std::ifstream in("/Users/ngoquyduong/CLionProjects/assessment_real/input4.txt");
+
+    if (!in.is_open()) {
+        throw std::runtime_error("Could not open input4.txt");
+    }
+
+    std::vector<std::string> banks;
+    std::string line;
+
+    while (std::getline(in, line)) {
+        if (!line.empty()) {
+            banks.push_back(line);
+        }
+    }
+
+    return banks;
+}
+
+bool isValid(int r, int c, int rows, int cols) {
+    return r >= 0 && r < rows && c >= 0 && c < cols;
+}
+
+long long dayFourPartOne() {
+    std::vector<std::string> matrix = readInput4();
+    int rows = matrix.size();
+    int cols = matrix[0].length();
+    int limit = 4;
+    long long accessible = 0;
+
+    for (int r = 0; r < matrix.size(); r++) {
+        for (int c = 0; c < matrix[r].length(); c++) {
+            if (matrix[r][c] == '.') {
+                continue;
+            }
+            int atCount = 0;
+            char top_left_relative_to_current = !(isValid(r-1, c-1, rows, cols)) ? '.' : (matrix[r-1][c-1]);
+            char top_mid_relative_to_current = !(isValid(r-1, c, rows, cols)) ? '.' : (matrix[r-1][c]);
+            char top_right_relative_to_current = !(isValid(r-1, c+1, rows, cols)) ? '.' : (matrix[r-1][c+1]);
+            char mid_left_relative_to_current = !(isValid(r, c-1, rows, cols)) ? '.' : (matrix[r][c-1]);
+            char mid_right_relative_to_current = !(isValid(r, c+1, rows, cols)) ? '.' : (matrix[r][c+1]);
+            char bot_left_relative_to_current = !(isValid(r+1, c-1, rows, cols)) ? '.' : (matrix[r+1][c-1]);
+            char bot_mid_relative_to_current = !(isValid(r+1, c, rows, cols)) ? '.' : (matrix[r+1][c]);
+            char bot_right_relative_to_current = !(isValid(r+1, c+1, rows, cols)) ? '.' : (matrix[r+1][c+1]);
+
+            if (top_left_relative_to_current == '@') atCount++;
+            if (top_mid_relative_to_current == '@') atCount++;
+            if (top_right_relative_to_current == '@') atCount++;
+            if (mid_left_relative_to_current == '@') atCount++;
+            if (mid_right_relative_to_current == '@') atCount++;
+            if (bot_left_relative_to_current == '@') atCount++;
+            if (bot_mid_relative_to_current == '@') atCount++;
+            if (bot_right_relative_to_current == '@') atCount++;
+
+            if (atCount < limit) {
+                accessible++;
+            }
+        }
+
+    }
+    return accessible;
+}
+
+long long dayFourPartTwo() {
+    std::vector<std::string> matrix = readInput4();
+    int rows = matrix.size();
+    int cols = matrix[0].length();
+    int limit = 4;
+    long long removed = 0;
+    while (true) {
+        std::vector<std::pair<int, int>> toRemove;
+        for (int r = 0; r < matrix.size(); r++) {
+            for (int c = 0; c < matrix[r].length(); c++) {
+                if (matrix[r][c] == '.') {
+                    continue;
+                }
+                int atCount = 0;
+                char top_left_relative_to_current = !(isValid(r-1, c-1, rows, cols)) ? '.' : (matrix[r-1][c-1]);
+                char top_mid_relative_to_current = !(isValid(r-1, c, rows, cols)) ? '.' : (matrix[r-1][c]);
+                char top_right_relative_to_current = !(isValid(r-1, c+1, rows, cols)) ? '.' : (matrix[r-1][c+1]);
+                char mid_left_relative_to_current = !(isValid(r, c-1, rows, cols)) ? '.' : (matrix[r][c-1]);
+                char mid_right_relative_to_current = !(isValid(r, c+1, rows, cols)) ? '.' : (matrix[r][c+1]);
+                char bot_left_relative_to_current = !(isValid(r+1, c-1, rows, cols)) ? '.' : (matrix[r+1][c-1]);
+                char bot_mid_relative_to_current = !(isValid(r+1, c, rows, cols)) ? '.' : (matrix[r+1][c]);
+                char bot_right_relative_to_current = !(isValid(r+1, c+1, rows, cols)) ? '.' : (matrix[r+1][c+1]);
+
+                if (top_left_relative_to_current == '@') atCount++;
+                if (top_mid_relative_to_current == '@') atCount++;
+                if (top_right_relative_to_current == '@') atCount++;
+                if (mid_left_relative_to_current == '@') atCount++;
+                if (mid_right_relative_to_current == '@') atCount++;
+                if (bot_left_relative_to_current == '@') atCount++;
+                if (bot_mid_relative_to_current == '@') atCount++;
+                if (bot_right_relative_to_current == '@') atCount++;
+
+                if (atCount < limit) {
+                    toRemove.push_back({r, c});
+                }
+            }
+
+        }
+        if (toRemove.empty()) {
+            break;
+        }
+
+        for (auto [r, c] : toRemove) {
+            matrix[r][c] = '.';
+        }
+
+        removed += toRemove.size();
+    }
+    return removed;
+}
+
+
+
+////////////////
+///
+///DAY 5
+///
+////////////////
+
+
+std::pair<std::vector<std::pair<long long, long long>>, std::vector<long long>> readInput5() {
+    std::ifstream in("/Users/ngoquyduong/CLionProjects/assessment_real/input5.txt");
+
+    std::vector<std::pair<long long, long long>> ranges;
+    std::vector<long long> values;
+
+    std::string line;
+    bool secondPart = false;
+
+    while (getline(in, line)) {
+        if (line.empty()) {
+            secondPart = true;
+            continue;
+        }
+
+        if (!secondPart) {
+            size_t dashPos = line.find('-');
+
+            long long left = std::stoll(line.substr(0, dashPos));
+            long long right = std::stoll(line.substr(dashPos + 1));
+
+            ranges.push_back({left, right});
+        } else {
+            values.push_back(std::stoll(line));
+        }
+    }
+
+    return {ranges, values};
+}
+
+
+long long dayFivePartOne() {
+    auto [ranges, values] = readInput5();
+    long long fresh = 0;
+    for (long long value: values) {
+        bool inRange = false;
+        for (std::pair<long long, long long> range : ranges) {
+            if (value >= range.first && value <= range.second) {
+                inRange = true;
+                fresh++;
+            }
+
+            if (inRange) {
+                break;
+            }
+        }
+    }
+    return fresh;
+}
+
+
+long long dayFivePartTwo() {
+    auto [ranges, _] = readInput5();
+
+    if (ranges.empty()) return 0;
+
+    std::sort(ranges.begin(), ranges.end());
+
+    long long total = 0;
+    long long currentLeft = ranges[0].first;
+    long long currentRight = ranges[0].second;
+
+    for (int i = 1; i < ranges.size(); i++) {
+        long long nextLeft = ranges[i].first;
+        long long nextRight = ranges[i].second;
+
+        if (nextLeft <= currentRight + 1) {
+            currentRight = std::max(currentRight, nextRight);
+        } else {
+            total += currentRight - currentLeft + 1;
+            currentLeft = nextLeft;
+            currentRight = nextRight;
+        }
+    }
+
+    total += currentRight - currentLeft + 1;
+
+    return total;
+}
 int main() {
 
 
-    std::cout << dayThreePartTwo() ;
+    std::cout << dayOnePartOne() << std::endl;
+    std::cout << dayOnePartTwo()<< std::endl;
+    std::cout << dayTwoPartOne()<< std::endl;
+    std::cout << dayTwoPartTwo()<< std::endl;
+    std::cout << dayThreePartOne()<< std::endl;
+    std::cout << dayThreePartTwo()<< std::endl;
+    std::cout << dayFourPartOne()<< std::endl;
+    std::cout << dayFourPartTwo()<< std::endl;
+    std::cout << dayFivePartOne()<< std::endl;
+    std::cout << dayFivePartTwo()<< std::endl;
     return 0;
 }
