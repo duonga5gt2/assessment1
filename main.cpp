@@ -229,13 +229,14 @@ std::vector<std::string> readInput3() {
     return banks;
 }
 
-int find_two_largest_digits_from_input(const std::string& number) {
+int find_two_largest_digits_from_input(std::string number) {
+    std::string number_copy = number;
     int best = 0;
 
-    for (int i = 0; i < number.length(); i++) {
-        for (int j = i + 1; j < number.length(); j++) {
-            int first = number[i] - '0';
-            int second = number[j] - '0';
+    for (int i = 0; i < number_copy.length(); i++) {
+        for (int j = i + 1; j < number_copy.length(); j++) {
+            int first = number_copy[i] - '0';
+            int second = number_copy[j] - '0';
             int value = first * 10 + second;
 
             if (value > best) {
@@ -260,34 +261,39 @@ int dayThreePartOne() {
     return total;
 }
 
+long long find_the_largest_12_digits(std::string number) {
+    std::vector<char> stack;
+    int removeCount = number.length() - 12;
 
-
-
-std::vector<std::string> generateCombinations(const std::string& s, int k, int start, std::string current) {
-    std::vector<std::string> result;
-
-    if (current.length() == k) {
-        result.push_back(current);
-        return result;
+    for (char c : number) {
+        while (!stack.empty() && removeCount > 0 && stack.back() < c) {
+            stack.pop_back();
+            removeCount--;
+        }
+        stack.push_back(c);
     }
 
-    for (int i = start; i < s.length(); i++) {
-        std::vector<std::string> subResult = generateCombinations(s, k, i + 1, current + s[i]);
-        result.insert(result.end(), subResult.begin(), subResult.end());
+    while (removeCount > 0) {
+        stack.pop_back();
+        removeCount--;
     }
 
-    return result;
+    std::string result(stack.begin(), stack.end());
+    return std::stoll(result);
 }
 
-
-int dayThreePartTwo() {
+long long dayThreePartTwo() {
     std::vector<std::string> num_string = readInput3();
-    int total = 0;
+    long long total = 0;
+    for (int i = 0; i < num_string.size(); i++) {
+        total += find_the_largest_12_digits(num_string[i]);
+    }
+    return total;
 
 }
 int main() {
 
 
-    std::cout << dayThreePartOne() ;
+    std::cout << dayThreePartTwo() ;
     return 0;
 }
